@@ -42,14 +42,14 @@ public class ContactController {
     @PutMapping("/{id}")
     public ResponseEntity<Contact> updateContactById(@PathVariable Long id, @RequestBody Contact updatedContact) {
         Optional<Contact> existingContact = contactService.getContactById(id);
-
         return existingContact.map(contact -> {
+            if (updatedContact.getPhoneNumber() == null || updatedContact.getName() == null || updatedContact.getLastname() == null) {
+                return null;
+            }
             updatedContact.setId(id);
             return ResponseEntity.ok(contactService.updateContact(updatedContact));
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteContact(@PathVariable Long id) {

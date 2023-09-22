@@ -26,6 +26,10 @@ public class ContactService {
     }
 
     public Contact createContact(Contact contact) {
+
+        if (contact == null || contact.getName() == null || contact.getLastname() == null || contact.getPhoneNumber() == null) {
+            return null;
+        }
         return contactRepository.save(contact);
     }
 

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class ContactService {
@@ -26,12 +28,23 @@ public class ContactService {
     }
 
     public Contact createContact(Contact contact) {
-
         if (contact == null || contact.getName() == null || contact.getLastname() == null || contact.getPhoneNumber() == null) {
             return null;
         }
+
+        String regex = "^(8|\\+7)-\\d{3}-\\d{3}-\\d{2}-\\d{2}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(contact.getPhoneNumber());
+
+        if (!matcher.matches()) {
+            return null;
+        }
+
+
         return contactRepository.save(contact);
     }
+
+
 
 
     public Contact updateContact(Contact contact) {

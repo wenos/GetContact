@@ -31,8 +31,8 @@ public class GetContactApplicationTests {
 
     @Test
     public void testGetAllContacts() {
-        Contact contact1 = new Contact(1L, "John", "Taylor", "89922871554");
-        Contact contact2 = new Contact(2L, "Alice", "Taylor", "89922871554");
+        Contact contact1 = new Contact(1L, "John", "Taylor", "8-992-287-15-54");
+        Contact contact2 = new Contact(2L, "Alice", "Taylor", "8-992-287-15-54");
         contactService.createContact(contact1);
         contactService.createContact(contact2);
         ResponseEntity<List<Contact>> response = contactController.getAllContacts();
@@ -51,7 +51,7 @@ public class GetContactApplicationTests {
 
     @Test
     public void testGetContactsById() {
-        Contact contact1 = new Contact(1L, "John", "Taylor", "89922871554");
+        Contact contact1 = new Contact(1L, "John", "Taylor", "8-992-287-15-54");
         contactService.createContact(contact1);
         ResponseEntity<Contact> response = contactController.getContactById(1L);
         assertEquals(200, response.getStatusCode().value());
@@ -85,16 +85,26 @@ public class GetContactApplicationTests {
     }
 
     @Test
+    public void testCreateContactNull3() {
+        Contact contact = new Contact(1L, "John", "Taylor", "8-992-287-1554");
+        ResponseEntity<?> response = contactController.createContact(contact);
+        assertEquals(400, response.getStatusCode().value());
+        assertEquals(response.getBody(), "Failed to create contact");
+    }
+
+    @Test
     public void testCreateContact() {
-        Contact contact = new Contact(1L, "John", "Taylor", "89922871554");
+        Contact contact = new Contact(1L, "John", "Taylor", "8-992-287-15-54");
         ResponseEntity<?> response = contactController.createContact(contact);
         assertEquals(200, response.getStatusCode().value());
         assertEquals(response.getBody(), contact);
     }
 
+
+
     @Test
     public void testDeleteContact() {
-        Contact contact = new Contact(1L, "John", "Taylor", "89922871554");
+        Contact contact = new Contact(1L, "John", "Taylor", "8-992-287-15-54");
         contactController.createContact(contact);
         ResponseEntity<?> response = contactController.deleteContact(1L);
         assertEquals(200, response.getStatusCode().value());
@@ -110,9 +120,9 @@ public class GetContactApplicationTests {
 
     @Test
     public void testUpdateContact() {
-        Contact contact = new Contact(1L, "John", "Taylor", "89922871554");
+        Contact contact = new Contact(1L, "John", "Taylor", "8-992-287-15-54");
         contactController.createContact(contact);
-        Contact contact1 = new Contact(1L, "Sed", "Taylor", "89922871554");
+        Contact contact1 = new Contact(1L, "Sed", "Taylor", "8-992-287-15-54");
 
         ResponseEntity<?> response = contactController.updateContactById(1L, contact1);
         assertEquals(200, response.getStatusCode().value());
@@ -129,7 +139,7 @@ public class GetContactApplicationTests {
 
     @Test
     public void testUpdateContactNull2() {
-        ResponseEntity<?> response = contactController.updateContactById(1L, null);
+        ResponseEntity<?>  response = contactController.updateContactById(1L, null);
         assertEquals(404, response.getStatusCode().value());
         assertNull(response.getBody());
     }

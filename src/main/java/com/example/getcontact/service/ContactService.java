@@ -27,8 +27,10 @@ public class ContactService {
         return contactRepository.findById(id);
     }
 
-    public Contact createContact(Contact contact) {
-        if (contact == null || contact.getName() == null || contact.getLastname() == null || contact.getPhoneNumber() == null) {
+    public Contact validateContact(Contact contact) {
+        if (Optional.ofNullable(contact).map(Contact::getName).isEmpty() ||
+                Optional.of(contact).map(Contact::getLastname).isEmpty() ||
+                Optional.of(contact).map(Contact::getPhoneNumber).isEmpty()) {
             return null;
         }
 
@@ -39,12 +41,15 @@ public class ContactService {
         if (!matcher.matches()) {
             return null;
         }
-
-
-        return contactRepository.save(contact);
+        return contact;
     }
 
+    public Contact createContact(Contact contact) {
+        return Optional.ofNullable(validateContact(contact))
+                .map(contactRepository::save)
+                .orElse(null);
 
+    }
 
 
     public Contact updateContact(Contact contact) {

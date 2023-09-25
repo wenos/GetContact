@@ -20,4 +20,6 @@ public class Contact {
     private String lastname;
     @Column(name="phone_number")
     private String phoneNumber;
+
+
 }

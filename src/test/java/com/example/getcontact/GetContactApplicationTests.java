@@ -131,17 +131,19 @@ public class GetContactApplicationTests {
 
     @Test
     public void testUpdateContactNull1() {
+        Contact contact = new Contact(1L, "John", "Taylor", "8-992-287-15-54");
+        contactController.createContact(contact);
         ResponseEntity<?> response = contactController.updateContactById(1L, new Contact());
-        assertEquals(404, response.getStatusCode().value());
-        assertNull(response.getBody());
-
+        assertEquals(400, response.getStatusCode().value());
+        assertEquals("Failed to update contact", response.getBody());
     }
 
     @Test
     public void testUpdateContactNull2() {
-        ResponseEntity<?>  response = contactController.updateContactById(1L, null);
+        Contact contact = new Contact(1L, "John", "Taylor", "8-992-287-15-54");
+        contactController.createContact(contact);
+        ResponseEntity<?>  response = contactController.updateContactById(2L, contact);
         assertEquals(404, response.getStatusCode().value());
-        assertNull(response.getBody());
     }
 
 }

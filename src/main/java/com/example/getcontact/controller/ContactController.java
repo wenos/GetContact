@@ -40,21 +40,20 @@ public class ContactController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Contact> updateContactById(@PathVariable Long id, @RequestBody Contact updatedContact) {
-        Optional<Contact> existingContact = contactService.getContactById(id);
-        return existingContact.map(contact -> {
-            if (updatedContact.getPhoneNumber() == null || updatedContact.getName() == null || updatedContact.getLastname() == null) {
-                return null;
-            }
-            updatedContact.setId(id);
-            return ResponseEntity.ok(contactService.updateContact(updatedContact));
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<?> updateContactById(@PathVariable Long id, @RequestBody Contact updatedContact) {
+        if (contactService.validateContact(updatedContact) == null) {
+            return ResponseEntity.badRequest().body("Failed to update contact");
+        }
+        if (contactService.getContactById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        updatedContact.setId(id);
+        return ResponseEntity.ok(contactService.updateContact(updatedContact));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteContact(@PathVariable Long id) {
         Optional<Contact> existingContact = contactService.getContactById(id);
-
         if (existingContact.isPresent()) {
             contactService.deleteContact(id);
             return ResponseEntity.ok("Contact deleted successfully");
